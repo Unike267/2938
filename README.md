@@ -11,3 +11,16 @@
 ## SEE 
 
 https://github.com/ghdl/ghdl/issues/2938
+
+## refs
+
+- GH CLI:
+  - [gh_issue_view](https://cli.github.com/manual/gh_issue_view)
+- Markdown parsers:
+  - [marked](https://github.com/markedjs/marked)
+  - [markdown-it](https://github.com/markdown-it/markdown-it) 
+  - [markdown-it.github.io](https://markdown-it.github.io/)
+- JSON VHDL PARSER:
+  - [Paebbels/JSON-for-VHDL](https://github.com/Paebbels/JSON-for-VHDL)
+- Source of this idea:
+  - [umarcor/issue-runner](https://github.com/umarcor/issue-runner)
