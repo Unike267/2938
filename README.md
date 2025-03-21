@@ -12,7 +12,71 @@
 
 https://github.com/ghdl/ghdl/issues/2938
 
-## refs
+## Ideas:
+
+- Parser:
+  - **REMEBER:** do not reinvent the wheel!
+    - See [parser-generator](https://github.com/topics/parser-generator), such as:
+      - [antlr4](https://github.com/antlr/antlr4)
+  - **Choosing the right language is a hard decision**
+    - I only know how to speak VHDL, C, and a bit of Bash, so which language should I use?
+      - Maybe C?
+      - In Unai's words, "You have to use each language for its intended purpose." In this case, something like Python, Go, or TypeScript might be better.
+      - However, I am more familiar with CNC programming than with these languages.
+      - Actually, C++ might be a good choice. 🤔
+- CI:
+  - Instead of using a specific container image, build the container directly in CI.
+  - Use the `.github/ghdl.containerfile` file to build an image from the latest commit. The build command:
+    - `podman build -f  .github/ghdl.containerfile -t ghdl:commit-hash --target ghdl`
+  - Then, run the CI with this image, something like:
+
+```yml
+  run_HDL_code-blocks_with_ghdl_in_latest_commit_version:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: '🧰 Checkout'
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: 'Build GHDL from latest commit and run code-blocks'
+        run: |
+          git clone https://github.com/ghdl/ghdl
+          cd ghdl
+          commit=$(git describe --always)
+          cd ..
+          rm -rf ghdl
+          podman build -f  .github/ghdl.containerfile -t ghdl:$commit --target ghdl
+          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit something.sh
+```
+
+  - Maybe the issue could include a field to specify the GHDL commit to run, inserting this info as an environment variable..
+
+```yml
+  run_HDL_code-blocks_with_ghdl_in_specific_commit_version:
+    runs-on: ubuntu-latest
+    env:
+      commit: $commit¿?
+
+    steps:
+      - name: '🧰 Checkout'
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: 'Build GHDL from custom commit and run code-blocks'
+        run: |
+          sed -i '44s|^|\n|' .github/ghdl.containerfile
+          sed -i '44s|^| \&\& git checkout '"$commit"' \\|' .github/ghdl.containerfile
+          podman build -f  .github/ghdl.containerfile -t ghdl:$commit --target ghdl
+          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit something.sh    
+```
+
+
+## References
 
 - GH CLI:
   - [gh_issue_view](https://cli.github.com/manual/gh_issue_view)
