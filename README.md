@@ -49,7 +49,7 @@ https://github.com/ghdl/ghdl/issues/2938
           cd ..
           rm -rf ghdl
           podman build -f  .github/ghdl.containerfile -t ghdl:$commit --target ghdl
-          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit something.sh
+          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit code-blocks-run.sh
 ```
 
   - Maybe the issue could include a field to specify the GHDL commit to run, inserting this info as an environment variable..
@@ -72,7 +72,7 @@ https://github.com/ghdl/ghdl/issues/2938
           sed -i '44s|^|\n|' .github/ghdl.containerfile
           sed -i '44s|^| \&\& git checkout '"$commit"' \\|' .github/ghdl.containerfile
           podman build -f  .github/ghdl.containerfile -t ghdl:$commit --target ghdl
-          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit something.sh    
+          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit code-blocks-run.sh 
 ```
 
 
