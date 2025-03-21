@@ -74,7 +74,8 @@ https://github.com/ghdl/ghdl/issues/2938
           podman build -f  .github/ghdl.containerfile -t ghdl:$commit --target ghdl
           podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit code-blocks-run.sh 
 ```
-
+  - Access to the issue main comment/other comments through the GH CLI. 
+    - See job: `fetch_issue`
 
 ## References
 
