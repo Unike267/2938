@@ -1,0 +1,29 @@
+name: test
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+
+  fetch_issue:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: '🧰 Checkout'
+        uses: actions/checkout@v4
+
+      - name: 'Fetch GHDL issue'
+        run: |
+          gh issue view https://github.com/ghdl/ghdl/issues/2943 > issue.txt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: '📤 Upload artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: issue_fetch_test
+          path: ./issue.txt
+
