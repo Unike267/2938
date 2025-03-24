@@ -73,7 +73,7 @@ jobs:
           commit=$(git describe --always)
           cd ..
           rm -rf ghdl
-          top=$(cat src/top.txt)
+          top=$(cat top.txt)
           podman build -f .github/ghdl.containerfile -t ghdl:$commit --target ghdl
           podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit -i *.vhd
           podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit -m $top
