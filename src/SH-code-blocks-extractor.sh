@@ -45,8 +45,8 @@ if [[ ${#sh_end[@]} > 1 ]] then
     exit
 fi 
 
-echo "Their final lines are:"
+echo "Their final line are:"
 echo "${sh_end}"
  
-echo "Extract code-blocks:"
+echo "Extract code-block:"
 sed -n ''"$((${sh_begin}+1))"','"$((${sh_end}-1))"'p;'"$((${sh_end}))"'q' ../issue.txt > sh_code_block.sh
