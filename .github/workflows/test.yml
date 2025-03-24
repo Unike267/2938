@@ -17,7 +17,7 @@ jobs:
 
       - name: 'Fetch GHDL issue'
         run: |
-          gh issue view https://github.com/ghdl/ghdl/issues/2943 > issue.txt
+          gh issue view https://github.com/ghdl/ghdl/issues/2945 > issue.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -51,5 +51,39 @@ jobs:
           name: code_and_top
           path: |
             ./src/*.vhd
-            ./src/sh_code_block.sh
             ./src/top.txt
+
+  run_HDL_code-blocks_with_ghdl_in_latest_commit_version:
+    runs-on: ubuntu-latest
+    needs: extract_code_and_top
+
+    steps:
+
+      - name: '🧰 Checkout'
+        uses: actions/checkout@v4
+
+      - name: 'Download code and top'
+        uses: actions/download-artifact@v4
+        with:
+          name: code_and_top
+      - name: 'RUN SIMULATION'
+        run: |
+          git clone https://github.com/ghdl/ghdl
+          cd ghdl
+          commit=$(git describe --always)
+          cd ..
+          rm -rf ghdl
+          top=$(cat src/top.txt)
+          podman build -f .github/ghdl.containerfile -t ghdl:$commit --target ghdl
+          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit -i *.vhd
+          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit -m $top
+          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit -r $top --vcd=wave.vcd
+          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit -i --std=08 *.vhd
+          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit -m --std=08 $top
+          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit -r --std=08 $top --vcd=wave_08.vcd
+      - name: '📤 Upload artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: sim_waveforms
+          path: |
+            ./*.vcd
