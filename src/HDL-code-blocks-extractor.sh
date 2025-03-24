@@ -54,8 +54,8 @@ do
     echo "$i"
 done
  
-echo "Extract code-blocks:"
 for ((i=0;i<num_vhd_blocks;i++))
 do
    sed -n ''"$((${vhd_begin[i]}+1))"','"$((${vhd_end[i]}-1))"'p;'"$((${vhd_end[i]}))"'q' ../issue.txt > vhd_code_block_"$(($i+1))".vhd
 done
+echo "VHDL code blocks have been extracted"
