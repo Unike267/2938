@@ -24,6 +24,7 @@ https://github.com/ghdl/ghdl/issues/2938
       - In Unai's words, "You have to use each language for its intended purpose." In this case, something like Python, Go, or TypeScript might be better.
       - However, I am more familiar with CNC programming than with these languages.
       - Actually, C++ might be a good choice. 🤔
+      - Currently, the selected language is BASH.
 - CI:
   - Instead of using a specific container image, build the container directly in CI.
   - Use the `.github/ghdl.containerfile` file to build an image from the latest commit. The build command:
@@ -76,6 +77,26 @@ https://github.com/ghdl/ghdl/issues/2938
 ```
   - Access to the issue main comment/other comments through the GH CLI. 
     - See job: `fetch_issue`
+  - Access to the issue number through:
+
+```yml
+    on:
+      issues:
+        types:
+          - opened
+          - edited
+          - reopened
+      workflow_dispatch:
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      NUMBER: ${{ github.event.issue.number }}
+
+...
+
+      - name: Get issue text
+        run: |
+          gh issue view ${{ github.event.issue.number }} > issue.txt
+```
 
 ## References
 
