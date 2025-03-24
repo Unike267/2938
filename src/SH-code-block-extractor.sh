@@ -45,7 +45,7 @@ if [[ ${#sh_end[@]} > 1 ]] then
     exit
 fi 
 
-echo "Their final line are:"
+echo "Their final line is:"
 echo "${sh_end}"
  
 echo "Extract code-block:"
