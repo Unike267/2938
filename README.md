@@ -16,6 +16,7 @@ https://github.com/ghdl/ghdl/issues/2938
 
 - Support for packages/libraries (parser for lib name) to fill the field `--work=$lib`
 - Support this type of sh blocks to correctly extract the `$top` name:
+- Support to run sim with 93 std
 
 ```sh
 comp_files="debug_mwe/debug.vhd debug_mwe/debug_tb.vhd"
