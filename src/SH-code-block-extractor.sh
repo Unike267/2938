@@ -49,4 +49,4 @@ echo "Their final line is:"
 echo "${sh_end}"
  
 sed -n ''"$((${sh_begin}+1))"','"$((${sh_end}-1))"'p;'"$((${sh_end}))"'q' ../issue.txt > sh_code_block.sh
-echo "SH code block have been extracted"
+echo "SH code block has been extracted"
