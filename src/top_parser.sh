@@ -26,8 +26,79 @@ num_r=${#ghdl_r[@]}
 num_elab_run=${#ghdl_elab_run[@]}
 
 if [[ $num_m == 0 && $num_e == 0 &&  $num_r == 0 && $num_elab_run == 0 ]] then 
-    echo "Cannot find the top" 
+    echo "ERROR: Cannot find an option to search the top" 
+    exit
+elif [[ $num_m > 1 || $num_e > 1 ||  $num_r > 1 || $num_elab_run > 1 ]] then
+    echo "ERROR: the same option (make|elab|run|elab-run) is used several times" 
     exit
 fi 
 
-#TO-DO
+if [[ $num_m == 1 ]] then
+  m_line=($(sed -n ''"$((${ghdl_m}))"'p' sh_code_block.sh))  
+
+  for i in $(seq $((${#m_line[@]} - 1)) -1 0)
+  do
+    if [[ ${m_line[$i]:0:2} != "--" && ${m_line[$i]:0:1} != '\' ]] then
+      m_top=${m_line[$i]}
+      echo "The code top name is <${m_line[$i]}> (extracted from -m option)"
+      break
+    fi
+  done
+fi
+
+if [[ $num_e == 1 ]] then
+  e_line=($(sed -n ''"$((${ghdl_e}))"'p' sh_code_block.sh))  
+
+  for i in $(seq $((${#e_line[@]} - 1)) -1 0)
+  do
+    if [[ ${e_line[$i]:0:2} != "--" && ${e_line[$i]:0:1} != '\' ]] then
+      e_top=${e_line[$i]}
+      echo "The code top name is <${e_line[$i]}> (extracted from -e option)"
+      break
+    fi
+  done
+fi
+
+if [[ $num_r == 1 ]] then
+  r_line=($(sed -n ''"$((${ghdl_r}))"'p' sh_code_block.sh))  
+
+  for i in $(seq $((${#r_line[@]} - 1)) -1 0)
+  do
+    if [[ ${r_line[$i]:0:2} != "--" && ${r_line[$i]:0:1} != '\' ]] then
+      r_top=${r_line[$i]}
+      echo "The code top name is <${r_line[$i]}> (extracted from -r option)"
+      break
+    fi
+  done
+fi
+
+if [[ $num_elab_run == 1 ]] then
+  elab_run_line=($(sed -n ''"$((${ghdl_elab_run}))"'p' sh_code_block.sh))  
+
+  for i in $(seq $((${#elab_run_line[@]} - 1)) -1 0)
+  do
+    if [[ ${elab_run_line[$i]:0:2} != "--" && ${elab_run_line[$i]:0:1} != '\' ]] then
+      elab_run_top=${elab_run_line[$i]}
+      echo "The code top name is <${elab_run_line[$i]}> (extracted from --elab-run option)"
+      break
+    fi
+  done
+fi
+
+top=($m_top $e_top $r_top $elab_run_top)
+k=0
+
+for i in "${top[@]}"
+do
+    val=($i $val)
+    if [[ $k > 0 ]] then
+        if [[ $i != ${top[$k-1]} ]] then
+        echo "ERROR: Different top names have been parsed"
+        exit
+        fi
+    fi
+  k=$(($k+1))
+done
+
+echo "All parsed tops have the same name: <${top[0]}>"
+echo ${top[0]} > top.txt
