@@ -29,6 +29,8 @@ jobs:
 
   extract_code_and_top:
     runs-on: ubuntu-latest
+    needs: fetch_issue
+
     steps:
 
       - name: '🧰 Checkout'
