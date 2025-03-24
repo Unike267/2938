@@ -66,14 +66,16 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: code_and_top
-      - name: 'RUN SIMULATION'
+      - name: 'Build container and run the simulation'
         run: |
           git clone https://github.com/ghdl/ghdl
           cd ghdl
           commit=$(git describe --always)
+          echo $commit
           cd ..
           rm -rf ghdl
           top=$(cat top.txt)
+          echo $top
           podman build -f .github/ghdl.containerfile -t ghdl:$commit --target ghdl
           podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit ghdl -i *.vhd
           podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit ghdl -m $top
