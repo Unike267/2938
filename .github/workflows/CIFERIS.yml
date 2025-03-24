@@ -1,0 +1,97 @@
+name: (CI) o(f) the issu(e) trigge(r)ed by the (is)sue - CIFERIS
+
+on:
+  issues:
+    types:
+      - opened
+      - edited
+      - reopened
+  workflow_dispatch:
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  ISSUE_NUMBER: ${{ github.event.issue.number }}
+
+jobs:
+
+  fetch_issue:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: '🧰 Checkout'
+        uses: actions/checkout@v4
+
+      - name: 'Fetch GHDL issue'
+        run: |
+          gh issue view $ISSUE_NUMBER > issue.txt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: '📤 Upload artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: issue_fetch_text
+          path: ./issue.txt
+
+  extract_code_and_top:
+    runs-on: ubuntu-latest
+    needs: fetch_issue
+
+    steps:
+
+      - name: '🧰 Checkout'
+        uses: actions/checkout@v4
+
+      - name: 'Download the issue'
+        uses: actions/download-artifact@v4
+        with:
+          name: issue_fetch_text
+      - name: 'Extract code and top'
+        run: |
+          ./src/HDL-code-blocks-extractor.sh
+          ./src/SH-code-block-extractor.sh
+          ./src/top_parser.sh
+      - name: '📤 Upload artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: code_and_top
+          path: |
+            ./src/*.vhd
+            ./src/top.txt
+
+  run_HDL_code-blocks_with_ghdl_in_latest_commit_version:
+    runs-on: ubuntu-latest
+    needs: extract_code_and_top
+
+    steps:
+
+      - name: '🧰 Checkout'
+        uses: actions/checkout@v4
+
+      - name: 'Download code and top'
+        uses: actions/download-artifact@v4
+        with:
+          name: code_and_top
+      - name: 'Build container and run the simulation'
+        run: |
+          git clone https://github.com/ghdl/ghdl
+          cd ghdl
+          commit=$(git describe --always)
+          echo $commit
+          cd ..
+          rm -rf ghdl
+          top=$(cat top.txt)
+          echo $top
+          podman build -f .github/ghdl.containerfile -t ghdl:$commit --target ghdl
+          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit ghdl -i *.vhd
+          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit ghdl -m $top
+          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit ghdl -r $top --vcd=wave.vcd
+          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit ghdl -i --std=08 *.vhd
+          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit ghdl -m --std=08 $top
+          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit ghdl -r --std=08 $top --vcd=wave_08.vcd
+      - name: '📤 Upload artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: sim_waveforms
+          path: |
+            ./*.vcd
