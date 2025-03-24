@@ -1,4 +1,4 @@
-# [Unike267](https://github.com/Unike267) 2938
+# [Unike267](https://github.com/Unike267) 2938 | (CI) o(f) the issu(e) trigge(r)ed by the (is)sue - CIFERIS
 
 - **University**: UPV/EHU.
 - **Doctoral Programme**: Engineering Physics.
@@ -14,9 +14,9 @@ https://github.com/ghdl/ghdl/issues/2938
 
 ## TODO
 
-- Support for packages/libraries (parser for lib name) to fill the field `--work=$lib`
-- Support this type of sh blocks to correctly extract the `$top` name:
-- Support to run sim with 93 std
+- Support for packages/libraries (parse library names) to populate the `--work=$lib` field.
+- Simulation support with VHDL-93 standard (many issues involve features from VHDL-2008, which are not the cause of the crash)
+- Support for this type of sh block to correctly extract the `$top` name:
 
 ```sh
 comp_files="debug_mwe/debug.vhd debug_mwe/debug_tb.vhd"
@@ -27,9 +27,6 @@ ghdl -c --std=08 -v $comp_files -r $top_module --wave=waveforms/"${top_module%% 
 ## Brainstorming:
 
 - Parser:
-  - **REMEBER:** do not reinvent the wheel!
-    - See [parser-generator](https://github.com/topics/parser-generator), such as:
-      - [antlr4](https://github.com/antlr/antlr4)
   - **Choosing the right language is a hard decision**
     - I only know how to speak VHDL, C, and a bit of Bash, so which language should I use?
       - Maybe C?
@@ -37,6 +34,9 @@ ghdl -c --std=08 -v $comp_files -r $top_module --wave=waveforms/"${top_module%% 
       - However, I am more familiar with CNC programming than with these languages.
       - Actually, C++ might be a good choice. 🤔
       - Currently, the selected language is BASH.
+  - **REMEBER:** do not reinvent the wheel! FTR:
+    - See [parser-generator](https://github.com/topics/parser-generator), such as:
+      - [antlr4](https://github.com/antlr/antlr4)
 - CI:
   - Instead of using a specific container image, build the container directly in CI.
   - Use the `.github/ghdl.containerfile` file to build an image from the latest commit. The build command:
