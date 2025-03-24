@@ -12,7 +12,18 @@
 
 https://github.com/ghdl/ghdl/issues/2938
 
-## Ideas:
+## TODO
+
+- Support for packages/libraries (parser for lib name) to fill the field `--work=$lib`
+- Support this type of sh blocks to correctly extract the `$top` name:
+
+```sh
+comp_files="debug_mwe/debug.vhd debug_mwe/debug_tb.vhd"
+top_module="debug_tb"
+ghdl -c --std=08 -v $comp_files -r $top_module --wave=waveforms/"${top_module%% *}".ghw --ieee-asserts=disable-at-0
+```
+
+## Brainstorming:
 
 - Parser:
   - **REMEBER:** do not reinvent the wheel!
