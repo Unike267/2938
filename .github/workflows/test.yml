@@ -27,3 +27,27 @@ jobs:
           name: issue_fetch_test
           path: ./issue.txt
 
+  extract_code_and_top:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: '🧰 Checkout'
+        uses: actions/checkout@v4
+
+      - name: 'Download the issue'
+        uses: actions/download-artifact@v4
+        with:
+          name: fetch_issue
+      - name: 'Extract code and top'
+        run: |
+          ./src/HDL-code-blocks-extractor.sh
+          ./src/SH-code-block-extractor.sh
+          ./src/top_parser.sh
+      - name: '📤 Upload artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: code_and_top
+          path: |
+            ./src/*.vhd
+            ./src/sh_code_block.sh
+            ./src/top.txt
