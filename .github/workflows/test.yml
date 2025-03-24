@@ -75,12 +75,12 @@ jobs:
           rm -rf ghdl
           top=$(cat top.txt)
           podman build -f .github/ghdl.containerfile -t ghdl:$commit --target ghdl
-          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit -i *.vhd
-          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit -m $top
-          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit -r $top --vcd=wave.vcd
-          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit -i --std=08 *.vhd
-          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit -m --std=08 $top
-          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit -r --std=08 $top --vcd=wave_08.vcd
+          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit ghdl -i *.vhd
+          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit ghdl -m $top
+          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit ghdl -r $top --vcd=wave.vcd
+          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit ghdl -i --std=08 *.vhd
+          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit ghdl -m --std=08 $top
+          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit ghdl -r --std=08 $top --vcd=wave_08.vcd
       - name: '📤 Upload artifact'
         uses: actions/upload-artifact@v4
         with:
