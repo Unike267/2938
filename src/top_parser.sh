@@ -90,7 +90,6 @@ k=0
 
 for i in "${top[@]}"
 do
-    val=($i $val)
     if [[ $k > 0 ]] then
         if [[ $i != ${top[$k-1]} ]] then
         echo "ERROR: Different top names have been parsed"
