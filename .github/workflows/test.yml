@@ -39,7 +39,7 @@ jobs:
       - name: 'Download the issue'
         uses: actions/download-artifact@v4
         with:
-          name: fetch_issue
+          name: issue_fetch_test
       - name: 'Extract code and top'
         run: |
           ./src/HDL-code-blocks-extractor.sh
