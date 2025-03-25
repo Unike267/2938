@@ -16,6 +16,8 @@ https://github.com/ghdl/ghdl/issues/2938
 
 - Support for packages/libraries (parse library names) to populate the `--work=$lib` field.
 - Simulation support with VHDL-93 standard (many issues involve features from VHDL-2008, which are not the cause of the crash)
+- Add support to trigger CI for code blocks in comments, not just the main issue description.
+- Adapt all paths to relative paths; consider adding a `PREFIX` variable.
 - Support for this type of sh block to correctly extract the `$top` name:
 
 ```sh
