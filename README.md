@@ -26,6 +26,18 @@ top_module="debug_tb"
 ghdl -c --std=08 -v $comp_files -r $top_module --wave=waveforms/"${top_module%% *}".ghw --ieee-asserts=disable-at-0
 ```
 
+- Taking Tristan's comment into account:
+
+```
+I think finding automatically the top unit is supported by synth and command -c (for jit backends).
+
+BTW, this new backtrace is available only during elaboration.
+I think we also need to tune the conditions to display it.
+```
+
+- Maybe the `top_parser` is redundant, since with the `-c` command and a just-in-time backend (such as mcode), the top of the design could be auto-completed.
+  - What would be needed is a parser/searcher to find library names and fill in the `--work=$lib` field.
+
 ## Brainstorming:
 
 - Parser:
