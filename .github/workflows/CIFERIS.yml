@@ -6,6 +6,7 @@ on:
       - opened
       - edited
       - reopened
+    if: contains(github.event.issue.labels.*.name, 'CIFERIS')
   workflow_dispatch:
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
