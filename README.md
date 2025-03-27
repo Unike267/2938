@@ -52,31 +52,34 @@ I think we also need to tune the conditions to display it.
     - See [parser-generator](https://github.com/topics/parser-generator), such as:
       - [antlr4](https://github.com/antlr/antlr4)
 - CI:
-  - Instead of using a specific container image, build the container directly in CI.
-  - Use the `.github/ghdl.containerfile` file to build an image from the latest commit. The build command:
-    - `podman build -f  .github/ghdl.containerfile -t ghdl:commit-hash --target ghdl`
-  - Then, run the CI with this image, something like:
+  - ~Instead of using a specific container image, build the container directly in CI.~
+  - This is redundant because the last step of the GHDL's CI, when a change is made, is to build a container on `Docker.io`:
+    - Specifically, we would be interested in:
+      - `docker.io/ghdl/ghdl:6.0.0-dev-mcode-ubuntu-24.04`
+      - `docker.io/ghdl/ghdl:6.0.0-dev-llvm-ubuntu-24.04`
+      - `docker.io/ghdl/ghdl:6.0.0-dev-llvm-jit-ubuntu-24.04`
+      - `docker.io/ghdl/ghdl:6.0.0-dev-gcc-ubuntu-24.04`
+  - Access to the issue main comment/other comments through the GH CLI. 
+    - See job: `fetch_issue`
+  - Access to the issue number through:
 
 ```yml
-  run_HDL_code-blocks_with_ghdl_in_latest_commit_version:
-    runs-on: ubuntu-latest
+    on:
+      issues:
+        types:
+          - opened
+          - edited
+          - reopened
+      workflow_dispatch:
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      NUMBER: ${{ github.event.issue.number }}
 
-    steps:
-      - name: '🧰 Checkout'
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          fetch-depth: 0
+...
 
-      - name: 'Build GHDL from latest commit and run code-blocks'
+      - name: Get issue text
         run: |
-          git clone https://github.com/ghdl/ghdl
-          cd ghdl
-          commit=$(git describe --always)
-          cd ..
-          rm -rf ghdl
-          podman build -f  .github/ghdl.containerfile -t ghdl:$commit --target ghdl
-          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit code-blocks-run.sh
+          gh issue view ${{ github.event.issue.number }} > issue.txt
 ```
 
   - Maybe the issue could include a field to specify the GHDL commit to run, inserting this info as an environment variable..
@@ -101,27 +104,33 @@ I think we also need to tune the conditions to display it.
           podman build -f  .github/ghdl.containerfile -t ghdl:$commit --target ghdl
           podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit code-blocks-run.sh 
 ```
-  - Access to the issue main comment/other comments through the GH CLI. 
-    - See job: `fetch_issue`
-  - Access to the issue number through:
+
+## Discarded ideas:
+
+  - Use the `.github/ghdl.containerfile` file to build an image from the latest commit. The build command:
+    - `podman build -f  .github/ghdl.containerfile -t ghdl:commit-hash --target ghdl`
+  - Then, run the CI with this image, something like:
 
 ```yml
-    on:
-      issues:
-        types:
-          - opened
-          - edited
-          - reopened
-      workflow_dispatch:
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      NUMBER: ${{ github.event.issue.number }}
+  run_HDL_code-blocks_with_ghdl_in_latest_commit_version:
+    runs-on: ubuntu-latest
 
-...
+    steps:
+      - name: '🧰 Checkout'
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
 
-      - name: Get issue text
+      - name: 'Build GHDL from latest commit and run code-blocks'
         run: |
-          gh issue view ${{ github.event.issue.number }} > issue.txt
+          git clone https://github.com/ghdl/ghdl
+          cd ghdl
+          commit=$(git describe --always)
+          cd ..
+          rm -rf ghdl
+          podman build -f  .github/ghdl.containerfile -t ghdl:$commit --target ghdl
+          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl:$commit code-blocks-run.sh
 ```
 
 ## References
