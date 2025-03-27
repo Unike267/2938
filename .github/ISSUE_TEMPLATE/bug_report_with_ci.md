@@ -1,9 +1,12 @@
 ---
 name: Bug report with CI
 about: This issue operates with the CIFERIS-(CI) o(f) the issu(e) trigge(r)ed by the (is)sue feature integrated
-type: Bug-with-CI
+title: ''
 labels: CIFERIS
+assignees: ''
+
 ---
+
 
 **Description**
 A clear and concise description of what the issue is about.
