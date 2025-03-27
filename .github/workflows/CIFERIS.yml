@@ -59,7 +59,7 @@ jobs:
             ./src/*.vhd
             ./src/top.txt
 
-  run_HDL_code-blocks_with_ghdl_all_backends_std_08:
+  run_HDL_code-blocks_with_ghdl_all_backends_24_04_std_08:
     runs-on: ubuntu-latest
     needs: extract_code_and_top
 
