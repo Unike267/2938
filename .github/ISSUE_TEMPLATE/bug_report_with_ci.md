@@ -1,7 +1,7 @@
 ---
 name: Bug report with CI
 about: This issue operates with the CIFERIS-(CI) o(f) the issu(e) trigge(r)ed by the (is)sue feature integrated
-label: CIFERIS
+labels: CIFERIS
 ---
 
 **Description**
