@@ -6,16 +6,15 @@ on:
       - opened
       - edited
       - reopened
-    if: contains(github.event.issue.labels.*.name, 'CIFERIS')
   workflow_dispatch:
 env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   ISSUE_NUMBER: ${{ github.event.issue.number }}
 
 jobs:
 
   fetch_issue:
     runs-on: ubuntu-latest
+    if: contains(github.event.issue.labels.*.name, 'CIFERIS')
 
     steps:
 
@@ -37,6 +36,7 @@ jobs:
   extract_code_and_top:
     runs-on: ubuntu-latest
     needs: fetch_issue
+    if: contains(github.event.issue.labels.*.name, 'CIFERIS')
 
     steps:
 
@@ -63,6 +63,7 @@ jobs:
   run_HDL_code-blocks_with_ghdl_all_backends_24_04_std_08:
     runs-on: ubuntu-latest
     needs: extract_code_and_top
+    if: contains(github.event.issue.labels.*.name, 'CIFERIS')
 
     steps:
 
