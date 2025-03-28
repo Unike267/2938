@@ -38,6 +38,8 @@ I think we also need to tune the conditions to display it.
 - Maybe the `top_parser` is redundant, since with the `-c` command and a just-in-time backend (such as mcode), the top of the design could be auto-completed.
   - What would be needed is a parser/searcher to find library names and fill in the `--work=$lib` field.
 
+- Another approach could be **instead of parsing/searching for the top/library from the SH code block, directly running the SH code block.** ❗ ❗ ❗
+
 ## Brainstorming:
 
 - Parser:
