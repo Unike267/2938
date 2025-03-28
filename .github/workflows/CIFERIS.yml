@@ -60,7 +60,7 @@ jobs:
             ./src/*.vhd
             ./src/top.txt
 
-  run_HDL_code-blocks_with_ghdl_all_backends_24_04_std_08:
+  run_HDL_code-blocks_with_ghdl_mcode_24_04_std_08:
     runs-on: ubuntu-latest
     needs: extract_code_and_top
     if: contains(github.event.issue.labels.*.name, 'CIFERIS')
@@ -74,29 +74,96 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: code_and_top
-      - name: 'Top name'
+      - name: 'Run simulation with mcode backend'
         run: |
           top=$(cat top.txt)
           echo "The parsed top name is: <$top>"
-      - name: 'Run simulation with mcode backend'
-        run: |
           podman pull docker.io/ghdl/ghdl:6.0.0-dev-mcode-ubuntu-24.04
           podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl/ghdl:6.0.0-dev-mcode-ubuntu-24.04 sh -c "ghdl -i --std=08 *.vhd && ghdl -m --std=08 $top && ghdl -r --std=08 $top --vcd=wave_mcode_std_08.vcd" 
+      - name: '📤 Upload artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: sim_waveform_mcode
+          path: |
+            ./*.vcd
+
+  run_HDL_code-blocks_with_ghdl_llvm_24_04_std_08:
+    runs-on: ubuntu-latest
+    needs: extract_code_and_top
+    if: contains(github.event.issue.labels.*.name, 'CIFERIS')
+
+    steps:
+
+      - name: '🧰 Checkout'
+        uses: actions/checkout@v4
+
+      - name: 'Download code and top'
+        uses: actions/download-artifact@v4
+        with:
+          name: code_and_top
       - name: 'Run simulation with llvm backend'
         run: |
+          top=$(cat top.txt)
+          echo "The parsed top name is: <$top>"
           podman pull docker.io/ghdl/ghdl:6.0.0-dev-llvm-ubuntu-24.04
           podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl/ghdl:6.0.0-dev-llvm-ubuntu-24.04 sh -c "ghdl -i --std=08 *.vhd && ghdl -m --std=08 $top && ghdl -r --std=08 $top --vcd=wave_llvm_std_08.vcd" 
+      - name: '📤 Upload artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: sim_waveforms_llvm
+          path: |
+            ./*.vcd
+
+  run_HDL_code-blocks_with_ghdl_llvm-jit_24_04_std_08:
+    runs-on: ubuntu-latest
+    needs: extract_code_and_top
+    if: contains(github.event.issue.labels.*.name, 'CIFERIS')
+
+    steps:
+
+      - name: '🧰 Checkout'
+        uses: actions/checkout@v4
+
+      - name: 'Download code and top'
+        uses: actions/download-artifact@v4
+        with:
+          name: code_and_top
       - name: 'Run simulation with llvm-jit backend'
         run: |
+          top=$(cat top.txt)
+          echo "The parsed top name is: <$top>"
           podman pull docker.io/ghdl/ghdl:6.0.0-dev-llvm-jit-ubuntu-24.04
-          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl/ghdl:6.0.0-dev-llvm-jit-ubuntu-24.04 sh -c "ghdl -i --std=08 *.vhd && ghdl -m --std=08 $top && ghdl -r --std=08 $top --vcd=wave_llvm_jit_std_08.vcd" 
+          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl/ghdl:6.0.0-dev-llvm-jit-ubuntu-24.04 sh -c "ghdl -i --std=08 *.vhd && ghdl -m --std=08 $top && ghdl -r --std=08 $top --vcd=wave_llvm-jit_std_08.vcd" 
+      - name: '📤 Upload artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: sim_waveforms_llvm-jit
+          path: |
+            ./*.vcd
+
+  run_HDL_code-blocks_with_ghdl_gcc_24_04_std_08:
+    runs-on: ubuntu-latest
+    needs: extract_code_and_top
+    if: contains(github.event.issue.labels.*.name, 'CIFERIS')
+
+    steps:
+
+      - name: '🧰 Checkout'
+        uses: actions/checkout@v4
+
+      - name: 'Download code and top'
+        uses: actions/download-artifact@v4
+        with:
+          name: code_and_top
       - name: 'Run simulation with gcc backend'
         run: |
+          top=$(cat top.txt)
+          echo "The parsed top name is: <$top>"
           podman pull docker.io/ghdl/ghdl:6.0.0-dev-gcc-ubuntu-24.04
           podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl/ghdl:6.0.0-dev-gcc-ubuntu-24.04 sh -c "ghdl -i --std=08 *.vhd && ghdl -m --std=08 $top && ghdl -r --std=08 $top --vcd=wave_gcc_std_08.vcd" 
       - name: '📤 Upload artifact'
         uses: actions/upload-artifact@v4
         with:
-          name: sim_waveforms
+          name: sim_waveforms_gcc
           path: |
             ./*.vcd
