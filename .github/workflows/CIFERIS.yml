@@ -106,8 +106,9 @@ jobs:
         run: |
           echo "The executable script is:"
           cat sh_code_block_executable.sh
-          ls -lah
+          chmod +x sh_code_block_executable.sh
           podman pull docker.io/ghdl/ghdl:6.0.0-dev-mcode-ubuntu-24.04
+          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl/ghdl:6.0.0-dev-mcode-ubuntu-24.04 ./sh_code_block_executable.sh
       - name: '📤 Upload artifact'
         uses: actions/upload-artifact@v4
         with:
