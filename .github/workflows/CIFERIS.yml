@@ -74,17 +74,25 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: code_and_top
-      - name: 'Pull containeres and run the simulations'
+      - name: 'Top name'
         run: |
           top=$(cat top.txt)
           echo "The parsed top name is: <$top>"
+      - name: 'Run simulation with mcode backend'
+        run: |
           podman pull docker.io/ghdl/ghdl:6.0.0-dev-mcode-ubuntu-24.04
-          podman pull docker.io/ghdl/ghdl:6.0.0-dev-llvm-ubuntu-24.04
-          podman pull docker.io/ghdl/ghdl:6.0.0-dev-llvm-jit-ubuntu-24.04
-          podman pull docker.io/ghdl/ghdl:6.0.0-dev-gcc-ubuntu-24.04
           podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl/ghdl:6.0.0-dev-mcode-ubuntu-24.04 sh -c "ghdl -i --std=08 *.vhd && ghdl -m --std=08 $top && ghdl -r --std=08 $top --vcd=wave_mcode_std_08.vcd" 
+      - name: 'Run simulation with llvm backend'
+        run: |
+          podman pull docker.io/ghdl/ghdl:6.0.0-dev-llvm-ubuntu-24.04
           podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl/ghdl:6.0.0-dev-llvm-ubuntu-24.04 sh -c "ghdl -i --std=08 *.vhd && ghdl -m --std=08 $top && ghdl -r --std=08 $top --vcd=wave_llvm_std_08.vcd" 
+      - name: 'Run simulation with llvm-jit backend'
+        run: |
+          podman pull docker.io/ghdl/ghdl:6.0.0-dev-llvm-jit-ubuntu-24.04
           podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl/ghdl:6.0.0-dev-llvm-jit-ubuntu-24.04 sh -c "ghdl -i --std=08 *.vhd && ghdl -m --std=08 $top && ghdl -r --std=08 $top --vcd=wave_llvm_jit_std_08.vcd" 
+      - name: 'Run simulation with gcc backend'
+        run: |
+          podman pull docker.io/ghdl/ghdl:6.0.0-dev-gcc-ubuntu-24.04
           podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl/ghdl:6.0.0-dev-gcc-ubuntu-24.04 sh -c "ghdl -i --std=08 *.vhd && ghdl -m --std=08 $top && ghdl -r --std=08 $top --vcd=wave_gcc_std_08.vcd" 
       - name: '📤 Upload artifact'
         uses: actions/upload-artifact@v4
