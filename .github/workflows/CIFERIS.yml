@@ -55,7 +55,7 @@ jobs:
       - name: '📤 Upload artifact'
         uses: actions/upload-artifact@v4
         with:
-          name: code_and_top
+          name: code_executable_and_top
           path: |
             ./src/*.vhd
             ./src/sh_code_block_executable.sh
@@ -63,7 +63,7 @@ jobs:
 
   run_HDL_code-blocks_with_ghdl_mcode_24_04_std_08:
     runs-on: ubuntu-latest
-    needs: extract_code_and_top
+    needs: extract_code_executable_and_top
     if: contains(github.event.issue.labels.*.name, 'CIFERIS')
 
     steps:
@@ -74,7 +74,7 @@ jobs:
       - name: 'Download code, executable and top'
         uses: actions/download-artifact@v4
         with:
-          name: code_and_top
+          name: code_executable_and_top
       - name: 'Run simulation with mcode backend'
         run: |
           top=$(cat top.txt)
@@ -90,7 +90,7 @@ jobs:
 
   run_HDL_code-blocks_with_ghdl_mcode_24_04_std_08_RUNNING_EXECUTABLE:
     runs-on: ubuntu-latest
-    needs: extract_code_and_top
+    needs: extract_code_executable_and_top
     if: contains(github.event.issue.labels.*.name, 'CIFERIS')
 
     steps:
@@ -101,8 +101,8 @@ jobs:
       - name: 'Download code, executable and top'
         uses: actions/download-artifact@v4
         with:
-          name: code_and_top
-      - name: 'Run simulation with mcode backend'
+          name: code_executable_and_top
+      - name: 'Run simulation with mcode backend through executable'
         run: |
           echo "The executable script is:"
           cat sh_code_block_executable.sh
@@ -111,13 +111,13 @@ jobs:
       - name: '📤 Upload artifact'
         uses: actions/upload-artifact@v4
         with:
-          name: sim_waveform_mcode
+          name: sim_waveform_mcode_executable
           path: |
             ./*.vcd
 
   run_HDL_code-blocks_with_ghdl_llvm_24_04_std_08:
     runs-on: ubuntu-latest
-    needs: extract_code_and_top
+    needs: extract_code_executable_and_top
     if: contains(github.event.issue.labels.*.name, 'CIFERIS')
 
     steps:
@@ -128,7 +128,7 @@ jobs:
       - name: 'Download code, executable and top'
         uses: actions/download-artifact@v4
         with:
-          name: code_and_top
+          name: code_executable_and_top
       - name: 'Run simulation with llvm backend'
         run: |
           top=$(cat top.txt)
@@ -144,7 +144,7 @@ jobs:
 
   run_HDL_code-blocks_with_ghdl_llvm-jit_24_04_std_08:
     runs-on: ubuntu-latest
-    needs: extract_code_and_top
+    needs: extract_code_executable_and_top
     if: contains(github.event.issue.labels.*.name, 'CIFERIS')
 
     steps:
@@ -155,7 +155,7 @@ jobs:
       - name: 'Download code, executable and top'
         uses: actions/download-artifact@v4
         with:
-          name: code_and_top
+          name: code_executable_and_top
       - name: 'Run simulation with llvm-jit backend'
         run: |
           top=$(cat top.txt)
@@ -171,7 +171,7 @@ jobs:
 
   run_HDL_code-blocks_with_ghdl_gcc_24_04_std_08:
     runs-on: ubuntu-latest
-    needs: extract_code_and_top
+    needs: extract_code_executable_and_top
     if: contains(github.event.issue.labels.*.name, 'CIFERIS')
 
     steps:
@@ -182,7 +182,7 @@ jobs:
       - name: 'Download code, executable and top'
         uses: actions/download-artifact@v4
         with:
-          name: code_and_top
+          name: code_executable_and_top
       - name: 'Run simulation with gcc backend'
         run: |
           top=$(cat top.txt)
