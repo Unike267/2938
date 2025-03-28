@@ -74,7 +74,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: code_and_top
-      - name: 'Build container and run the simulation'
+      - name: 'Pull containeres and run the simulations'
         run: |
           top=$(cat top.txt)
           echo "The parsed top name is: <$top>"
