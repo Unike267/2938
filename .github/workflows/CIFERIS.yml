@@ -33,7 +33,7 @@ jobs:
           name: issue_fetch_text
           path: ./issue.txt
 
-  extract_code_and_top:
+  extract_code_executable_and_top:
     runs-on: ubuntu-latest
     needs: fetch_issue
     if: contains(github.event.issue.labels.*.name, 'CIFERIS')
@@ -58,6 +58,7 @@ jobs:
           name: code_and_top
           path: |
             ./src/*.vhd
+            ./src/sh_code_block_executable.sh
             ./src/top.txt
 
   run_HDL_code-blocks_with_ghdl_mcode_24_04_std_08:
@@ -70,7 +71,7 @@ jobs:
       - name: '🧰 Checkout'
         uses: actions/checkout@v4
 
-      - name: 'Download code and top'
+      - name: 'Download code, executable and top'
         uses: actions/download-artifact@v4
         with:
           name: code_and_top
@@ -80,6 +81,33 @@ jobs:
           echo "The parsed top name is: <$top>"
           podman pull docker.io/ghdl/ghdl:6.0.0-dev-mcode-ubuntu-24.04
           podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl/ghdl:6.0.0-dev-mcode-ubuntu-24.04 sh -c "ghdl -i --std=08 *.vhd && ghdl -m --std=08 $top && ghdl -r --std=08 $top --vcd=wave_mcode_std_08.vcd" 
+      - name: '📤 Upload artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: sim_waveform_mcode
+          path: |
+            ./*.vcd
+
+  run_HDL_code-blocks_with_ghdl_mcode_24_04_std_08_RUNNING_EXECUTABLE:
+    runs-on: ubuntu-latest
+    needs: extract_code_and_top
+    if: contains(github.event.issue.labels.*.name, 'CIFERIS')
+
+    steps:
+
+      - name: '🧰 Checkout'
+        uses: actions/checkout@v4
+
+      - name: 'Download code, executable and top'
+        uses: actions/download-artifact@v4
+        with:
+          name: code_and_top
+      - name: 'Run simulation with mcode backend'
+        run: |
+          echo "The executable script is:"
+          cat sh_code_block_executable.sh
+          podman pull docker.io/ghdl/ghdl:6.0.0-dev-mcode-ubuntu-24.04
+          podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl/ghdl:6.0.0-dev-mcode-ubuntu-24.04 ./sh_code_block_executable.sh
       - name: '📤 Upload artifact'
         uses: actions/upload-artifact@v4
         with:
@@ -97,7 +125,7 @@ jobs:
       - name: '🧰 Checkout'
         uses: actions/checkout@v4
 
-      - name: 'Download code and top'
+      - name: 'Download code, executable and top'
         uses: actions/download-artifact@v4
         with:
           name: code_and_top
@@ -124,7 +152,7 @@ jobs:
       - name: '🧰 Checkout'
         uses: actions/checkout@v4
 
-      - name: 'Download code and top'
+      - name: 'Download code, executable and top'
         uses: actions/download-artifact@v4
         with:
           name: code_and_top
@@ -151,7 +179,7 @@ jobs:
       - name: '🧰 Checkout'
         uses: actions/checkout@v4
 
-      - name: 'Download code and top'
+      - name: 'Download code, executable and top'
         uses: actions/download-artifact@v4
         with:
           name: code_and_top
