@@ -50,7 +50,7 @@ jobs:
         run: |
           ./src/HDL-code-blocks-extractor.sh
           ./src/SH-code-block-extractor.sh
-          ./src/top_parser.sh
+          ./src/top_scanner.sh
       - name: '📤 Upload artifact'
         uses: actions/upload-artifact@v4
         with:

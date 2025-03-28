@@ -92,12 +92,12 @@ for i in "${top[@]}"
 do
     if [[ $k > 0 ]] then
         if [[ $i != ${top[$k-1]} ]] then
-        echo "ERROR: Different top names have been parsed"
+        echo "ERROR: Different top names have been scanned"
         exit
         fi
     fi
   k=$(($k+1))
 done
 
-echo "All parsed tops have the same name: <${top[0]}>"
+echo "All scanned tops have the same name: <${top[0]}>"
 echo ${top[0]} > top.txt

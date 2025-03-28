@@ -14,7 +14,7 @@ https://github.com/ghdl/ghdl/issues/2938
 
 ## TODO
 
-- Support for packages/libraries (parse library names) to populate the `--work=$lib` field.
+- Support for packages/libraries (scan library names) to populate the `--work=$lib` field.
 - Simulation support with VHDL-93 standard (many issues involve features from VHDL-2008, which are not the cause of the crash)
 - Add support to trigger CI for code blocks in comments, not just the main issue description.
 - Adapt all paths to relative paths; consider adding a `PREFIX` variable.
@@ -35,10 +35,10 @@ BTW, this new backtrace is available only during elaboration.
 I think we also need to tune the conditions to display it.
 ```
 
-- Maybe the `top_parser` is redundant, since with the `-c` command and a just-in-time backend (such as mcode), the top of the design could be auto-completed.
-  - What would be needed is a parser/searcher to find library names and fill in the `--work=$lib` field.
+- Maybe the `top_scanner` is redundant, since with the `-c` command and a just-in-time backend (such as mcode), the top of the design could be auto-completed.
+  - What would be needed is a scanner/searcher to find library names and fill in the `--work=$lib` field.
 
-- Another approach could be **instead of parsing/searching for the top/library from the SH code block, directly running the SH code block.** ❗ ❗ ❗
+- Another approach could be **instead of scanning/searching for the top/library from the SH code block, directly running the SH code block.** ❗ ❗ ❗
 
 ## Brainstorming:
 

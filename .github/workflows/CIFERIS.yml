@@ -51,7 +51,7 @@ jobs:
         run: |
           ./src/HDL-code-blocks-extractor.sh
           ./src/SH-code-block-extractor.sh
-          ./src/top_parser.sh
+          ./src/top_scanner.sh
       - name: '📤 Upload artifact'
         uses: actions/upload-artifact@v4
         with:
@@ -78,7 +78,7 @@ jobs:
       - name: 'Run simulation with mcode backend'
         run: |
           top=$(cat top.txt)
-          echo "The parsed top name is: <$top>"
+          echo "The scanned top name is: <$top>"
           podman pull docker.io/ghdl/ghdl:6.0.0-dev-mcode-ubuntu-24.04
           podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl/ghdl:6.0.0-dev-mcode-ubuntu-24.04 sh -c "ghdl -i --std=08 *.vhd && ghdl -m --std=08 $top && ghdl -r --std=08 $top --vcd=wave_mcode_std_08.vcd" 
       - name: '📤 Upload artifact'
@@ -133,7 +133,7 @@ jobs:
       - name: 'Run simulation with llvm backend'
         run: |
           top=$(cat top.txt)
-          echo "The parsed top name is: <$top>"
+          echo "The scanned top name is: <$top>"
           podman pull docker.io/ghdl/ghdl:6.0.0-dev-llvm-ubuntu-24.04
           podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl/ghdl:6.0.0-dev-llvm-ubuntu-24.04 sh -c "ghdl -i --std=08 *.vhd && ghdl -m --std=08 $top && ghdl -r --std=08 $top --vcd=wave_llvm_std_08.vcd" 
       - name: '📤 Upload artifact'
@@ -160,7 +160,7 @@ jobs:
       - name: 'Run simulation with llvm-jit backend'
         run: |
           top=$(cat top.txt)
-          echo "The parsed top name is: <$top>"
+          echo "The scanned top name is: <$top>"
           podman pull docker.io/ghdl/ghdl:6.0.0-dev-llvm-jit-ubuntu-24.04
           podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl/ghdl:6.0.0-dev-llvm-jit-ubuntu-24.04 sh -c "ghdl -i --std=08 *.vhd && ghdl -m --std=08 $top && ghdl -r --std=08 $top --vcd=wave_llvm-jit_std_08.vcd" 
       - name: '📤 Upload artifact'
@@ -187,7 +187,7 @@ jobs:
       - name: 'Run simulation with gcc backend'
         run: |
           top=$(cat top.txt)
-          echo "The parsed top name is: <$top>"
+          echo "The scanned top name is: <$top>"
           podman pull docker.io/ghdl/ghdl:6.0.0-dev-gcc-ubuntu-24.04
           podman run --rm -tv $(pwd):/wrk:Z -w /wrk ghdl/ghdl:6.0.0-dev-gcc-ubuntu-24.04 sh -c "ghdl -i --std=08 *.vhd && ghdl -m --std=08 $top && ghdl -r --std=08 $top --vcd=wave_gcc_std_08.vcd" 
       - name: '📤 Upload artifact'
