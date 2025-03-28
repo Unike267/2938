@@ -29,7 +29,6 @@ echo "${sh_begin}"
 
 
 flag=0
-k=0
 for i in "${all_quotes[@]}"
 do
     if [[ ${sh_begin} == $i ]] then 
@@ -50,3 +49,15 @@ echo "${sh_end}"
  
 sed -n ''"$((${sh_begin}+1))"','"$((${sh_end}-1))"'p;'"$((${sh_end}))"'q' ../issue.txt > sh_code_block.sh
 echo "SH code block has been extracted"
+
+cat sh_code_block.sh > sh_code_block_executable.sh
+
+adaptation=('#!/usr/bin/env bash' 'set -e' 'cd $(dirname "$0")')
+k=1
+for i in "${adaptation[@]}"
+do
+  sed -i ''"$k"'s|^|\n|' sh_code_block_executable.sh
+  sed -i ''"$k"'s|^|'"$i"'|' sh_code_block_executable.sh
+  k=$(($k+1))
+done
+chmod +x sh_code_block_executable.sh
