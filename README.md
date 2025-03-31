@@ -40,6 +40,15 @@ I think we also need to tune the conditions to display it.
 
 - Another approach could be **instead of scanning/searching for the top/library from the SH code block, directly running the SH code block.** ❗ ❗ ❗
 
+- Add another script to processes the ghdl result. Then:
+  - Add new job in CI to run this script and fill a variable, for example `$processing_result`, depending on the script result.
+The value of this variable could be:
+    - `mwe reproducible`
+    - `mwe not reproducible`
+    - `pending bug`
+  - With the command `gh issue edit --add-label $processing_result` label the issue.
+  - When a change in ghdl code is made trigger (only) the CI of the issues labeled with `pending bug`, and close them through `gh issue close` if the CI doesn't broke.
+
 ## Brainstorming:
 
 - Parser:
