@@ -59,6 +59,7 @@ The value of this variable could be:
       - However, I am more familiar with CNC programming than with these languages.
       - Actually, C++ might be a good choice. 🤔
       - Currently, the selected language is BASH.
+        - At the moment, in this language, the code-block extractors and top scanner are written.
   - **REMEBER:** do not reinvent the wheel! FTR:
     - See [parser-generator](https://github.com/topics/parser-generator), such as:
       - [antlr4](https://github.com/antlr/antlr4)
