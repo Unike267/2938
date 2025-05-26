@@ -15,6 +15,11 @@ https://github.com/ghdl/ghdl/issues/2938
 ## TODO
 
 - Support for packages/libraries (scan library names) to populate the `--work=$lib` field.
+- Take into account that VHDL allows describing multiple entities and architectures, as well as packages, within the same file.
+Currently, the system assumes that each module (entity/architecture) is described independently in its own code block.
+  - In addition, users may include their minimal working example (MWE), testbench, and package all within a single file, as in the following case:
+    - https://github.com/ghdl/ghdl/issues/3007
+      - Scenarios like this must also be considered.
 - Simulation support with VHDL-93 standard (many issues involve features from VHDL-2008, which are not the cause of the crash)
 - Add support to trigger CI for code blocks in comments, not just the main issue description.
 - Adapt all paths to relative paths; consider adding a `PREFIX` variable.
